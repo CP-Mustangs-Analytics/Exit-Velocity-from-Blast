@@ -63,4 +63,3 @@ graph <- ggplot(teamev, aes(x=reorder(Player, ExitVelocity), y=ExitVelocity,
   ggtitle("Exit Velocities") + xlab("Player") + ylab("Exit Velocity (mph)")
 graph + coord_cartesian(ylim=c(80,100))
 
-#reference README for graphing options
