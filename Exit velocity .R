@@ -1,24 +1,16 @@
-setwd("/Users/benmangelsdorf/Desktop/Baseball Projects/Data")
-blast <- read.csv("armstrong.csv", head = TRUE)
-ea = .1 + (blast$On.Plane.Efficiency.... / 1000) 
-ev = (ea * 55) + (1+ea)*blast$Bat.Speed..mph.
-blast$ea = .1 + (blast$On.Plane.Efficiency.... / 1000) 
-blast$ev = (blast$ea * 55) + (1+blast$ea)*blast$Bat.Speed..mph.
-blast$ea2 = .05 + (blast$On.Plane.Efficiency.... / 1000) 
-blast$ev2 = (blast$ea2 * 55) + (1+blast$ea2)*blast$Bat.Speed..mph.
-blast$ea3 =  blast$On.Plane.Efficiency.... / 1000
-blast$ev3 = (blast$ea3 * 55) + (1+blast$ea3)*blast$Bat.Speed..mph.
-mean(blast$ev)
-
-#final:
-
-setwd("/Users/benmangelsdorf/Desktop/Baseball Projects/Data")
+#the main function
+#it returns the average exit velocity of the player
 exitvelo <- function(dataset) {
   blastdata <- read.csv(dataset, head = TRUE)
+  #I calculated the collison efficiency by taking the player's on plane efficiency and
+  #dividing by 1000 and adding that to 0.05 (reference the README for reasoning)
   blastdata$ea = .05 + (blastdata$On.Plane.Efficiency.... / 1000) 
+  #I used a pitch speed of 85mph (reference the README for reasoning)
   blastdata$ev = (blastdata$ea * 85) + (1+blastdata$ea)*blastdata$Bat.Speed..mph.
   return(avexitvelo = mean(blastdata$ev))
 }
+
+#creating a exit velocity for each of the players
 armstrongev <- exitvelo("armstrong.csv")
 ashworthev <- exitvelo("ashworth.csv")
 beesleyev <- exitvelo("beesley.csv")
@@ -40,6 +32,8 @@ taylorev <- exitvelo("taylor.csv")
 wagensellerev <- exitvelo("wagenseller.csv")
 wellsev <- exitvelo("wells.csv")
 teamev <- data.frame(matrix(ncol = 0, nrow = 20))
+
+#combining the exit veolocities into one data frame 
 teamev$ExitVelocity <- c(armstrongev, ashworthev, beesleyev, cabreraev, canoev, corioev,
                         dicarloev, emmersonev, greeneev, gurnikev, kuzmaev, leeev,
                         loucksev,marinconzev, ogrinev, samuelsonev, sandsev, taylorev,
@@ -51,6 +45,7 @@ teamev$Player <- c("armstrong", "ashworth", "beesley", "cabrera", "cano", "corio
 attach(teamev)
 teamev <- teamev[order(ExitVelocity),]
 library(ggplot2)
+
 #final graph with names: 
 graph <- ggplot(teamev, aes(x=reorder(Player, ExitVelocity), y=ExitVelocity, 
                             label=Player), width=.5) + 
@@ -68,38 +63,4 @@ graph <- ggplot(teamev, aes(x=reorder(Player, ExitVelocity), y=ExitVelocity,
   ggtitle("Exit Velocities") + xlab("Player") + ylab("Exit Velocity (mph)")
 graph + coord_cartesian(ylim=c(80,100))
 
-
-# testing to see if on plane efficiency changes the order of players
-swingspeed <- function(dataset) {
-  blastdata <- read.csv(dataset, head = TRUE)
-  return(avss = mean(blastdata$Bat.Speed..mph.))
-}
-armstrongss <- swingspeed("armstrong.csv")
-ashworthss <- swingspeed("ashworth.csv")
-beesleyss <- swingspeed("beesley.csv")
-cabrerass <- swingspeed("cabrera.csv")
-canoss <- swingspeed("cano.csv")
-corioss <- swingspeed("corio.csv")
-dicarloss <- swingspeed("dicarlo.csv")
-emmersonss <- swingspeed("emmerson.csv")
-greeness <- swingspeed("greene.csv")
-gurnikss <- swingspeed("gurnik.csv")
-kuzmass <- swingspeed("kuzma.csv")
-leess <- swingspeed("lee.csv")
-loucksss <- swingspeed("loucks.csv")
-marinconzss <- swingspeed("marinconz.csv")
-ogrinss <- swingspeed("ogrin.csv")
-samuelsonss <- swingspeed("samuelson.csv")
-sandsss <- swingspeed("sands.csv")
-taylorss <- swingspeed("taylor.csv")
-wagensellerss <- swingspeed("wagenseller.csv")
-wellsss <- swingspeed("wells.csv")
-teamss <- data.frame(matrix(ncol = 0, nrow = 20))
-teamss$SwingSpeed <- c(armstrongss, ashworthss, beesleyss, cabrerass, canoss, corioss,
-                         dicarloss, emmersonss, greeness, gurnikss, kuzmass, leess,
-                         loucksss,marinconzss, ogrinss, samuelsonss, sandsss, taylorss,
-                         wagensellerss, wellsss)
-teamss$Player <- c("armstrong", "ashworth", "beesley", "cabrera", "cano", "corio",
-                   "dicarlo", "emmerson", "greene", "gurnik", "kuzma", "lee",
-                   "loucks", "marinconz", "ogrin", "samuelson", "sands", "taylor",
-                   "wagenseller", "wells")
+#reference README for graphing options
